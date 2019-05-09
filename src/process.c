@@ -87,7 +87,7 @@ int processSetStatus(Process *p, int status) {
 			if (status==PROC_READY) p->status=status;
 			else ret=-1;
 			break;
-		case PROC_READY: 
+		case PROC_READY:
 			if (status==PROC_RUNNING) p->status=status;
 			else ret=-1;
 			break;

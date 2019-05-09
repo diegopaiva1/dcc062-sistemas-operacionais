@@ -91,7 +91,7 @@ Process* _doRandomThings(Process *plist) {
 			continue;
 		}
 		r = rand() / (double)RAND_MAX;
-		if (processGetStatus(p)==PROC_RUNNING && 
+		if (processGetStatus(p)==PROC_RUNNING &&
 		    r < PROCESS_BLOCK_PROBABILITY) {
 			processSetStatus(p,PROC_WAITING);
 			r = rand() / (double)RAND_MAX;
@@ -115,7 +115,7 @@ Process* _doRandomThings(Process *plist) {
 			processSetStatus(p,PROC_READY);
 			printf("Desbloqueado processo %d\n",pid);
 		}
-	}			
+	}
 	printf("======================\n");
 	return plist;
 }
@@ -124,17 +124,17 @@ int main(void) {
 	int i = 0, step = 0;
 	char c = ' ';
 	Process* plist = NULL, *p1 = NULL;
-	
+
 	srand(time(NULL));
-	
+
 	//Inicializar escalonadores de processos
 	schedInitSchedInfo();
 	lottInitSchedInfo();
-	
+
 	//Criando primeiro processo...
 	plist = _createProcess(plist, 1, 1);
 	printf("\n");
-	
+
 	while (c != 'n') {
 		switch (i) {
 			case 0:
@@ -156,11 +156,11 @@ int main(void) {
 				break;
 			default:
 				p1 = schedSchedule(plist);
-//				printf("(Passo:%d/Iteracao:%d) Processo escalonado PID %d.\n", step, i, processGetPid(p1));
-//				processDump(plist,_dumpSchedParams);
-//				printf("\n");
+				printf("(Passo:%d/Iteracao:%d) Processo escalonado PID %d.\n", step, i, processGetPid(p1));
+				processDump(plist,_dumpSchedParams);
+				printf("\n");
 				i++;
-		}		
+		}
 	}
 	return 0;
 }

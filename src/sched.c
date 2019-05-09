@@ -33,7 +33,7 @@ SchedInfo* schedGetSchedInfo(int slot) {
 	else return NULL;
 }
 
-//Aciona o escalonador de processos, que decide qual algoritmo deve ser usado 
+//Aciona o escalonador de processos, que decide qual algoritmo deve ser usado
 //e delega a esse algoritmo a decisao sobre qual processo obtera' a CPU
 //Retorna NULL caso nao haja um processo pronto para assumir a CPU (idle)
 //ou ponteiro para o processo escolhido
@@ -90,7 +90,7 @@ int schedRegisterScheduler(SchedInfo *si) {
 	for (i=0; i<MAX_NUM_SLOT && sched_slots[i]!=NULL; i++);
 	if (i==MAX_NUM_SLOT) return -1;
 
-	//Atribuir ao slot a estrutura com informacoes do novo escalonador	
+	//Atribuir ao slot a estrutura com informacoes do novo escalonador
 	sched_slots[i] = si;
 
 	return i;

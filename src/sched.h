@@ -19,7 +19,7 @@
 
 //Tipo estruturado para o registro de algoritmos de escalonamento.
 //- name e' o nome do algoritmo com MAX_NAME_LEN caracteres (excluindo \0)
-//- initParamsFn e' a funcao para inicializar os parametros de escalonamento 
+//- initParamsFn e' a funcao para inicializar os parametros de escalonamento
 //               especificamente para o algoritmo
 //- scheduleFn e' a funcao para decidir qual o proximo processo a obter a CPU
 //             especificamente para o algoritmo

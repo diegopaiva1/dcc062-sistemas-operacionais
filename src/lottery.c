@@ -15,6 +15,7 @@
 
 //Nome unico do algoritmo. Deve ter 4 caracteres.
 const char lottName[]="LOTT";
+int slot;
 
 //=====Funcoes Auxiliares=====
 
@@ -30,32 +31,75 @@ const char lottName[]="LOTT";
 //Deve envolver a inicializacao de possiveis parametros gerais
 //Deve envolver o registro do algoritmo junto ao escalonador
 void lottInitSchedInfo() {
-	//...
+  SchedInfo *sched_info = malloc(sizeof(SchedInfo));
+
+  strcpy(sched_info->name, lottName);
+  sched_info->initParamsFn = lottInitSchedParams;
+  sched_info->scheduleFn = lottSchedule;
+  sched_info->releaseParamsFn = lottReleaseParams;
+
+  slot = schedRegisterScheduler(sched_info);
 }
 
-//Inicializa os parametros de escalonamento de um processo p, chamada 
+//Inicializa os parametros de escalonamento de um processo p, chamada
 //normalmente quando o processo e' associado ao slot de Lottery
 void lottInitSchedParams(Process *p, void *params) {
-	//...
+	schedSetScheduler(p, params, slot);
 }
 
-//Retorna o proximo processo a obter a CPU, conforme o algortimo Lottery 
+//Retorna o proximo processo a obter a CPU, conforme o algortimo Lottery
 Process* lottSchedule(Process *plist) {
-	//...
+  int total_tickets = 0;
+
+  for (Process *current = plist; current != NULL; current = processGetNext(current))
+  {
+    LotterySchedParams *sched_params = processGetSchedParams(current);
+    total_tickets += sched_params->num_tickets;
+  }
+
+	int n = rand() % total_tickets;
+  int sum = 0;
+
+  for (Process *current = plist; current != NULL; current = processGetNext(current))
+  {
+    LotterySchedParams *sched_params = processGetSchedParams(current);
+    sum += sched_params->num_tickets;
+    if (n <= sum)
+      return current;
+  }
+
 	return NULL;
 }
 
-//Libera os parametros de escalonamento de um processo p, chamada 
+//Libera os parametros de escalonamento de um processo p, chamada
 //normalmente quando o processo e' desassociado do slot de Lottery
 //Retorna o numero do slot ao qual o processo estava associado
 int lottReleaseParams(Process *p) {
-	//...
-	return 0;
+	processSetSchedParams(p, NULL);
+  processSetSchedSlot(p, -1);
+
+	return slot;
 }
 
 //Transfere certo numero de tickets do processo src para o processo dst.
 //Retorna o numero de tickets efetivamente transfeirdos (pode ser menos)
 int lottTransferTickets(Process *src, Process *dst, int tickets) {
-	//...
-	return 0;
+	int transfered_tickets;
+  LotterySchedParams *src_sched_params = processGetSchedParams(src);
+  LotterySchedParams *dst_sched_params = processGetSchedParams(dst);
+
+  if (src_sched_params->num_tickets >= tickets)
+  {
+    src_sched_params->num_tickets -= tickets;
+    dst_sched_params->num_tickets += tickets;
+    transfered_tickets = tickets;
+  }
+  else
+  {
+    dst_sched_params->num_tickets = src_sched_params->num_tickets;
+    transfered_tickets = src_sched_params->num_tickets;
+    src_sched_params->num_tickets = 0;
+  }
+
+  return transfered_tickets;
 }
