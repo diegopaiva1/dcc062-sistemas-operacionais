@@ -64,7 +64,8 @@ Process* lottSchedule(Process *plist) {
   {
     LotterySchedParams *sched_params = processGetSchedParams(current);
     sum += sched_params->num_tickets;
-    if (n <= sum)
+
+    if (n <= sum && processGetStatus(current) != PROC_WAITING)
       return current;
   }
 
