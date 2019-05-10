@@ -1,7 +1,7 @@
 /*
 *  lottery.c - Implementacao do algoritmo Lottery Scheduling e sua API
 *
-*  Autores: SUPER_PROGRAMADORES_C
+*  Autores: Diego Paiva (201565516AC) e Thaynara Ferreira (201565254C)
 *  Projeto: Trabalho Pratico I - Sistemas Operacionais
 *  Organizacao: Universidade Federal de Juiz de Fora
 *  Departamento: Dep. Ciencia da Computacao
@@ -51,22 +51,26 @@ void lottInitSchedParams(Process *p, void *params) {
 Process* lottSchedule(Process *plist) {
   int total_tickets = 0;
 
-  for (Process *current = plist; current != NULL; current = processGetNext(current))
+  for (Process *p = plist; p != NULL; p = processGetNext(p))
   {
-    LotterySchedParams *sched_params = processGetSchedParams(current);
-    total_tickets += sched_params->num_tickets;
+    LotterySchedParams *sched_params = processGetSchedParams(p);
+
+    if (processGetStatus(p) != PROC_WAITING)
+      total_tickets += sched_params->num_tickets;
   }
 
 	int n = rand() % total_tickets;
   int sum = 0;
 
-  for (Process *current = plist; current != NULL; current = processGetNext(current))
+  for (Process *p = plist; p != NULL; p = processGetNext(p))
   {
-    LotterySchedParams *sched_params = processGetSchedParams(current);
-    sum += sched_params->num_tickets;
+    LotterySchedParams *sched_params = processGetSchedParams(p);
 
-    if (n <= sum && processGetStatus(current) != PROC_WAITING)
-      return current;
+    if (processGetStatus(p) != PROC_WAITING) {
+      sum += sched_params->num_tickets;
+      if (n <= sum)
+        return p;
+    }
   }
 
 	return NULL;
@@ -76,7 +80,8 @@ Process* lottSchedule(Process *plist) {
 //normalmente quando o processo e' desassociado do slot de Lottery
 //Retorna o numero do slot ao qual o processo estava associado
 int lottReleaseParams(Process *p) {
-	processSetSchedParams(p, NULL);
+  free(processGetSchedParams(p));
+  processSetSchedParams(p, NULL);
   processSetSchedSlot(p, -1);
 
 	return slot;
