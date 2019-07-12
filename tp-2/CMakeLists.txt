@@ -10,10 +10,13 @@ include_directories ("${PROJECT_SOURCE_DIR}/tp-2")
 add_executable (
     dcc062-tp2
     src/main.c
-    src/lottery.c
-    src/process.c
-    src/sched.c
-    src/lottery.h
-    src/process.h
-    src/sched.h
+    src/disk.c
+    src/inode.c
+    src/util.c
+    src/vfs.c
+    src/myfs.h
+    src/disk.h
+    src/inode.h
+    src/util.h
+    src/vfs.h
 )
