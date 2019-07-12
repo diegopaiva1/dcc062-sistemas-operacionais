@@ -14,9 +14,10 @@ add_executable (
     src/inode.c
     src/util.c
     src/vfs.c
-    src/myfs.h
+    src/myfs.c
     src/disk.h
     src/inode.h
     src/util.h
     src/vfs.h
+    src/myfs.h
 )

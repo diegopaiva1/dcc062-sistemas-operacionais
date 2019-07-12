@@ -1,7 +1,7 @@
 /*
 *  myfs.h - Funcoes que permitem a instalcao e uso de um novo sistema de arquivos
 *
-*  Autor: SUPER_PROGRAMADORES C
+*  Autor: Diego Paiva e Silva & Thaynara Ferreira de Souza
 *  Projeto: Trabalho Pratico II - Sistemas Operacionais
 *  Organizacao: Universidade Federal de Juiz de Fora
 *  Departamento: Dep. Ciencia da Computacao
