@@ -44,7 +44,7 @@ Inode* __inodeGetLastExtension (Inode *i) {
 		niNumber = i->next;
 		i = inodeLoad (niNumber, d);
 		if (!i) return NULL;
-	} 
+	}
 	else return NULL;
 	while (i->next != 0) {
 		niNumber = i->next;
@@ -68,7 +68,7 @@ unsigned int inodeAreaBeginSector ( void ) {
 //Funcao que cria um i-node vazio, identificado pelo seu numero (number),
 //que deve ser unico no sistema de arquivos. Retorna ponteiro para o i-node
 //criado ou NULL se nao houver memoria suficiente ou number invalido. A funcao
-//salva o i-node em disco, com conteudo vazio e, portanto, o sobrescreve se ja 
+//salva o i-node em disco, com conteudo vazio e, portanto, o sobrescreve se ja
 //existente
 Inode* inodeCreate (unsigned int number, Disk *d) {
 	if (number < 1) return NULL;
@@ -93,7 +93,7 @@ int inodeClear (Inode *i) {
 				return -1;
 			}
 			free (ni);
-		}	
+		}
 		i->next = 0;
 		for (int a = 0; a < NUMITEMS_PERINODE; a++)
 			i->inodeItem[a] = 0;
@@ -106,13 +106,13 @@ int inodeClear (Inode *i) {
 //ou -1 caso contrario. I-nodes sao salvos a partir do setor INODE_1STSECTOR. Numero de
 //i-nodes por setor pode variar de acordo com o tamanho do tipo unsigned int
 //Em arquiteturas de 64 bits testadas, unsigned int ocupa 32 bits. Nesse caso,
-//cada setor pode receber 8 i-nodes 
+//cada setor pode receber 8 i-nodes
 int inodeSave (Inode *i) {
 	if (i) {
 		unsigned long int sizeUInt = sizeof(unsigned int);
 		//Endereco do setor no qual o i-node sera' salvo
-		unsigned long int inodeSectorAddr = 
-			INODE_BEGINSECTOR + (i->number - 1) * INODE_SIZE 
+		unsigned long int inodeSectorAddr =
+			INODE_BEGINSECTOR + (i->number - 1) * INODE_SIZE
 			* sizeUInt / DISK_SECTORDATASIZE;
 		unsigned char sector[DISK_SECTORDATASIZE];
 
@@ -120,17 +120,17 @@ int inodeSave (Inode *i) {
 		if (ret < 0) return ret;
 
 		//Posicao de inicio do i-node dentro do setor
-		unsigned long int offset = ((i->number - 1) % 
+		unsigned long int offset = ((i->number - 1) %
 			   (DISK_SECTORDATASIZE / (INODE_SIZE * sizeUInt)))
                            * INODE_SIZE * sizeUInt;
 
 		//Alterando enderecos de blocos e atributos do i-node no setor
 		for (int a=0; a < NUMITEMS_PERINODE; a++)
-			ul2char (i->inodeItem[a], 
+			ul2char (i->inodeItem[a],
 			         &sector[offset+a*sizeUInt]);
-		ul2char (i->number, 
+		ul2char (i->number,
 		         &sector[offset+(INODE_SIZE-2)*sizeUInt]);
-		ul2char (i->next, 
+		ul2char (i->next,
 			 &sector[offset+(INODE_SIZE-1)*sizeUInt]);
 
 		//Salvando todo o setor onde se encontra o i-node...
@@ -145,7 +145,7 @@ int inodeSave (Inode *i) {
 Inode* inodeLoad (unsigned int number, Disk *d) {
 	unsigned long int sizeUInt = sizeof(unsigned int);
 	//Endereco do setor do qual o i-node sera' lido
-	unsigned long int inodeSectorAddr = 
+	unsigned long int inodeSectorAddr =
 		INODE_BEGINSECTOR + (number - 1) * INODE_SIZE * sizeUInt
 		    / DISK_SECTORDATASIZE;
 	unsigned char sector[DISK_SECTORDATASIZE];
@@ -155,7 +155,7 @@ Inode* inodeLoad (unsigned int number, Disk *d) {
 	if (ret < 0) return NULL;
 
 	//Posicao de inicio do i-node dentro do setor
-	unsigned long int offset = ((number - 1) % 
+	unsigned long int offset = ((number - 1) %
 		(DISK_SECTORDATASIZE / (INODE_SIZE * sizeUInt)))
 		* INODE_SIZE * sizeUInt;
 
@@ -226,7 +226,7 @@ int inodeAddBlock (Inode *i, unsigned int blockAddr) {
 			if (lastInodeExt->inodeItem[a] == 0) {
 				lastInodeExt->inodeItem[a] = blockAddr;
 				ret = inodeSave(lastInodeExt);
-				if (numblocks != NUMBLOCKS_PERINODE) 
+				if (numblocks != NUMBLOCKS_PERINODE)
 					free (lastInodeExt);
 				return ret;
 			}
@@ -235,7 +235,7 @@ int inodeAddBlock (Inode *i, unsigned int blockAddr) {
 		if (niNumber) {
 			lastInodeExt->next = niNumber;
 			ret = inodeSave (lastInodeExt);
-			if (numblocks != NUMBLOCKS_PERINODE) 
+			if (numblocks != NUMBLOCKS_PERINODE)
 				free (lastInodeExt);
 			if (ret < 0) return ret;
 		}
@@ -308,8 +308,8 @@ unsigned int inodeGetBlockAddr (Inode *i, unsigned int blockNum) {
 		if (blockNum < NUMBLOCKS_PERINODE)
 			return i->inodeItem[blockNum];
 		else {
-			unsigned int extNum = 1 + 
-			                      (blockNum - NUMBLOCKS_PERINODE) 
+			unsigned int extNum = 1 +
+			                      (blockNum - NUMBLOCKS_PERINODE)
 			                      / NUMITEMS_PERINODE;
 			unsigned int offset = (blockNum - NUMBLOCKS_PERINODE)
 			                      % NUMITEMS_PERINODE;
