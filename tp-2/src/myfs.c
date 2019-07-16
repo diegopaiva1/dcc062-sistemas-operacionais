@@ -54,10 +54,29 @@ int openFn(Disk *d, const char *path)
     file->disk  = d;
     file->path  = path;
     file->fd    = inodeGetNumber(inode);
+    //file->link = NULL;
     files[file->fd - 1] = file;
   }
 
   return file->fd;
+}
+
+int linkFn(int fd, const char *filename, unsigned int inumber) // TODO conferir se ja existe entrada de nome filename
+{
+    if(fd < 0 || fd >= MAX_FDS) return -1;
+    File* dir = files[fd];
+    if(dir == NULL) 
+      return -1;
+    Inode* inode = inodeLoad(inumber, dir->disk);
+    if(inode == NULL)
+      return -1;
+
+    LinkDir link;
+    strcpy(link.filename, filename);
+    link.inumber = inumber;
+    dir->link = link;
+
+    return 0;
 }
 
 int installMyFS()

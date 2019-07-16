@@ -18,7 +18,14 @@ typedef struct File {
   Disk *disk;
   const char *path;
   unsigned int fd;
+  LinkDir link;
 } File;
+
+typedef struct LinkDir
+{
+    char filename[100];
+    unsigned int inumber;
+} LinkDir;
 
 int isIdleFn(Disk *d);
 int openFn (Disk *d, const char *path);
