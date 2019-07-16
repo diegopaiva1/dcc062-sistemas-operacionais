@@ -82,14 +82,14 @@ typedef struct fs_info {
 	//Retorna 0 caso bem sucedido, ou -1 caso contrario.
 	int (*linkFn) (int fd, const char *filename, unsigned int inumber);
 
-	//Funcao para remover uma entrada existente em um diretorio, 
+	//Funcao para remover uma entrada existente em um diretorio,
 	//identificado por um descritor de arquivo existente. A entrada e'
 	//identificada pelo nome indicado em filename. Retorna 0 caso bem
 	//sucedido, ou -1 caso contrario.
 	int (*unlinkFn) (int fd, const char *filename);
 
 	//Funcao para fechar um diretorio, identificado por um descritor de
-	//arquivo existente. Retorna 0 caso bem sucedido, ou -1 caso contrario.	
+	//arquivo existente. Retorna 0 caso bem sucedido, ou -1 caso contrario.
 	int (*closedirFn) (int fd);
 
 } FSInfo;
@@ -102,7 +102,7 @@ void vfsInit ( void );
 int vfsMountRoot (Disk *d, char fsId);
 
 //Funcao para a desmontagem do sistema de arquivos. Nao podem haver arquivos
-//ou diretorios abertos para a desmontagem. Retorna 0 caso bem sucedido e -1 
+//ou diretorios abertos para a desmontagem. Retorna 0 caso bem sucedido e -1
 //caso contrario
 int vfsUnmountRoot ( void );
 
@@ -113,7 +113,7 @@ int vfsUnmountRoot ( void );
 int vfsFormat (Disk *d, unsigned int blockSize, char fsId);
 
 //Funcao para abertura de um arquivo, a partir do caminho especificado em path,
-//no modo Read/Write, criando o arquivo se nao existir. Retorna um descritor de 
+//no modo Read/Write, criando o arquivo se nao existir. Retorna um descritor de
 //arquivo, em caso de sucesso. Retorna -1, caso contrario.
 int vfsOpen (const char *path);
 
@@ -141,19 +141,19 @@ int vfsOpendir (const char *path);
 //Funcao para a leitura de um diretorio, identificado por um descritor de
 //arquivo existente. Os dados lidos correspondem a uma entrada de diretorio
 //na posicao atual do cursor no diretorio. O nome da entrada e' copiado para
-//filename, como uma string terminada em \0 (max 255+1). O numero do inode 
+//filename, como uma string terminada em \0 (max 255+1). O numero do inode
 //correspondente 'a entrada e' copiado para inumber. Retorna 1 se uma entrada
 //foi lida, 0 se fim de diretorio ou -1 caso mal sucedido
 int vfsReaddir (int fd, char *filename, unsigned int *inumber);
 
-//Funcao para adicionar uma entrada a um diretorio, identificado por um 
+//Funcao para adicionar uma entrada a um diretorio, identificado por um
 //descritor de arquivo existente. A nova entrada tera' o nome indicado por
 //filename e apontara' para o numero de i-node indicado por inumber. Retorna 0\
 //caso bem sucedido, ou -1 caso contrario.
 int vfsLink (int fd, const char *filename, unsigned int inumber);
 
 //Funcao para remover uma entrada existente em um diretorio, identificado por
-//um descritor de arquivo existente. A entrada e' identificada pelo nome 
+//um descritor de arquivo existente. A entrada e' identificada pelo nome
 //indicado em filename. Retorna 0 caso bem sucedido, ou -1 caso contrario.
 int vfsUnlink (int fd, const char *filename);
 

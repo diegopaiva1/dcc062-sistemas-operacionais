@@ -14,7 +14,14 @@
 
 #include "disk.h"
 
-//Funcao para instalar um novo sistema de arquivos no S.O.
-int installMyFS ( void );
+typedef struct File {
+  Disk *disk;
+  const char *path;
+  unsigned int fd;
+} File;
+
+int isIdleFn(Disk *d);
+int openFn (Disk *d, const char *path);
+int installMyFS(void); // Funcao para instalar um novo sistema de arquivos no S.O.
 
 #endif

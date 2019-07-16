@@ -1,5 +1,5 @@
 /*
-*  main.c - Aplicacao para simular carga sobre o VFS 
+*  main.c - Aplicacao para simular carga sobre o VFS
 *
 *  Autor: Marcelo Moreno
 *  Projeto: Trabalho Pratico II - Sistemas Operacionais
@@ -33,11 +33,11 @@ typedef struct fd {
 Disk *disks[MAX_CONNECTEDDISKS]; //Discos conectados ao sistema
 unsigned int connectedDisks = 0; //Numero de discos conectados
 
-Disk *rd = NULL;	//Disco montado como sistema de arquivos raiz 
+Disk *rd = NULL;	//Disco montado como sistema de arquivos raiz
 int rfsid = NO_ID;	//ID do sistema de arquivo montado como raiz
 
 FD fds[MAX_FDS];	//Status, tipo e path dos descritores de arquivo
-unsigned int fdc = 0;	//Numero de descritores de arquivos abertos	
+unsigned int fdc = 0;	//Numero de descritores de arquivos abertos
 
 //Interface para contruir novo disco ou reconstruir disco existente (formatacao
 //de baixo nivel). Para construcao de novo disco, e' previsto que o disco nao
@@ -71,7 +71,7 @@ void doDiskConnect(char *rawDiskPath) {
 		int id = -1;
 		int pending = 0;
 		for (int a=0; a<MAX_CONNECTEDDISKS; a++)
-			if (!disks[a]) { 
+			if (!disks[a]) {
 				id = a;
 				break;
 			}
@@ -93,7 +93,7 @@ void doDiskConnect(char *rawDiskPath) {
 		else
 			printf ("\n!! DiskConnect: FAILED. No such file or "
 			        "file is inaccessible/corrupted\n");
-		if (pending) { 
+		if (pending) {
 			free (rawDiskPath);
 			rawDiskPath = NULL;
 		}
@@ -142,7 +142,7 @@ void doDiskReadPrintSectors (void) {
 				printf ("\n!! DiskReadSector: FAILED. "
 				        "Invalid range!\n");
 			else {
-				unsigned char sector[DISK_SECTORDATASIZE]; 
+				unsigned char sector[DISK_SECTORDATASIZE];
 				if ( to > numSectors ) to = numSectors;
 				for (unsigned long a=from; a<=to; a++) {
 					if ( diskReadSector (disks[id],
@@ -150,12 +150,12 @@ void doDiskReadPrintSectors (void) {
 						printf ("\n!! DiskReadSector: "
 						        "FAILED. Cannot read!"
 						        "\n");
-					else { 
+					else {
 						printf ("-- Sector #%lu: ", a);
-						for (int b=0; 
+						for (int b=0;
 						     b < DISK_SECTORDATASIZE;
 						     b++)
-							printf ("%02X", 
+							printf ("%02X",
 							        sector[b]);
 						printf ("\n");
 					}
@@ -178,7 +178,7 @@ void doDiskDisconnect ( int id ) {
 		if ( id > MAX_CONNECTEDDISKS - 1 || !disks[id])
 			printf ("\n!! DiskDisconnect: FAILED. "
 			        "Invalid identifier!\n");
-		else if (disks[id] == rd) 
+		else if (disks[id] == rd)
 			printf ("\n!! DiskDisconnect: FAILED. Cannot "
 			        "disconnect the root filesystem disk\n");
 		else {
@@ -210,7 +210,7 @@ void doFSFormat (void) {
 		if ( id > MAX_CONNECTEDDISKS - 1 || !disks[id])
 			printf ("\n!! DiskFormat: FAILED. "
 			        "Invalid identifier!\n");
-		else if (disks[id] == rd) 
+		else if (disks[id] == rd)
 			printf ("\n!! DiskFormat: FAILED. "
 			        "Cannot format the root filesystem disk\n");
 		else {
@@ -276,7 +276,7 @@ void doFSShowFDs (void) {
 	if ( !rd )
 		printf ("\n!! ShowFDs: FAILED. No root filesystem mounted!\n");
 	else {
-		if (!fdc)	
+		if (!fdc)
 			printf ("\n!! ShowFDs: No file descriptors in use!\n");
 		else {
 			printf("\n-- ShowFDs: Showing...\n");
@@ -419,7 +419,7 @@ void doFileClose (int fd) {
 		}
 		printf ("\n-- Closing... "); fflush (stdout);
 		if ( vfsClose(fd) > -1 ) {
-			printf ("File %s successfully closed.\n", 
+			printf ("File %s successfully closed.\n",
 			        fds[fd-1].path);
 			fds[fd-1].status = 0;
 			fds[fd-1].type = 0;
@@ -715,7 +715,7 @@ void mainMenuSelection (void) {
 			case 'I': case 'i': fileMenuSelection(); break;
 			case 'R': case 'r': dirMenuSelection(); break;
 			case 'Q': case 'q': choice = sanitizeBeforeQuit();
-					    break; 
+					    break;
 		}
 	}
 }
@@ -732,7 +732,7 @@ int main (int argc, char* argv[]) {
 		strcpy (fds[a-1].path, "");
 	}
 
-	if (argc > 1) 
+	if (argc > 1)
 		doDiskConnect (argv[1]);
 
 	mainMenuSelection();

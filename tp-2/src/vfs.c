@@ -38,7 +38,7 @@ void vfsInit ( void ) {
 	for (int i=0; i<MAX_INSTALLED_FS; i++)
 		installedFSInfo[i] = NULL;
 	rootDisk = NULL;
-	rootFS = NULL;	
+	rootFS = NULL;
 }
 
 //Funcao para a montagem do sistema de arquivos que sera' a raiz da arvore
@@ -75,11 +75,11 @@ int vfsFormat (Disk *d, unsigned int blockSize, char fsId) {
 }
 
 //Funcao para abertura de um arquivo, a partir do caminho especificado em path,
-//no modo Read/Write, criando o arquivo se nao existir. Retorna um descritor de 
+//no modo Read/Write, criando o arquivo se nao existir. Retorna um descritor de
 //arquivo, em caso de sucesso. Retorna -1, caso contrario.
 //Descritores de arquivo se iniciam em 1
 int vfsOpen (const char *path) {
-	if ( !rootDisk || !rootFS ) return -1;
+  if ( !rootDisk || !rootFS ) return -1;
 	return rootFS->openFn (rootDisk, path);
 }
 
@@ -127,7 +127,7 @@ int vfsReaddir (int fd, char *filename, unsigned int *inumber) {
         return rootFS->readdirFn (fd, filename, inumber);
 }
 
-//Funcao para adicionar uma entrada a um diretorio, identificado por um 
+//Funcao para adicionar uma entrada a um diretorio, identificado por um
 //descritor de arquivo existente. A nova entrada tera' o nome indicado por
 //filename e apontara' para o numero de i-node indicado por inumber. Retorna 0\
 //caso bem sucedido, ou -1 caso contrario.
@@ -137,7 +137,7 @@ int vfsLink (int fd, const char *filename, unsigned int inumber) {
 }
 
 //Funcao para remover uma entrada existente em um diretorio, este identificado
-//por um descritor de arquivo existente. A entrada e' identificada pelo nome 
+//por um descritor de arquivo existente. A entrada e' identificada pelo nome
 //indicado em filename. Retorna 0 caso bem sucedido, ou -1 caso contrario.
 int vfsUnlink (int fd, const char *filename) {
         if ( !rootDisk || !rootFS ) return -1;
@@ -192,4 +192,3 @@ void vfsDumpFSInfo (void) {
 		}
 	if (noFS) printf ("\n!! FSInfo: No file systems supported\n");
 }
-
