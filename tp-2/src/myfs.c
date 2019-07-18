@@ -9,9 +9,26 @@
 FSInfo *fsInfo;
 File *files[MAX_FDS] = {NULL};
 
-//Funcao para verificacao se o sistema de arquivos está ocioso, ou seja,
-//se nao ha quisquer descritores de arquivos em uso atualmente. Retorna
-//um positivo se ocioso ou, caso contrario, 0.
+int installMyFS()
+{
+  fsInfo = malloc(sizeof(FSInfo));
+
+  fsInfo->fsname = "DTFS";
+  fsInfo->fsid = (char) vfsRegisterFS(fsInfo);
+  fsInfo->isidleFn = isIdleFn;
+  //fsInfo->formatFn = formatFn;
+  fsInfo->openFn = openFn;
+  fsInfo->readFn = readFn;
+  //fsInfo->writeFn = writenFn;
+  //fsInfo->closeFn = closeFn;
+  //fsInfo->opendirFn = opendirFn;
+  //fsInfo->readdirFn = readdirFn;
+  fsInfo->linkFn = linkFn;
+  //fsInfo->unlinkFn = unlinkFn;
+  //fsInfo->closedirFn = closedirFn;
+
+}
+
 int isIdleFn(Disk *d)
 {
   for (int i = 0; i < MAX_FDS; i++)
@@ -21,17 +38,16 @@ int isIdleFn(Disk *d)
   return 1;
 }
 
-File* __getFile(Disk *d, const char *path)
+File* __getFile(Disk* d, const char* path)
 {
   for (int i = 0; i < MAX_FDS; i++)
-    if (files[i] != NULL)
-      if (files[i]->disk == d && strcmp(files[i]->path, path) == 0)
-        return files[i];
+    if (files[i] != NULL && files[i]->disk == d && strcmp(files[i]->path, path) == 0)
+      return files[i];
 
   return NULL;
 }
 
-int openFn(Disk *d, const char *path)
+int openFn(Disk* d, const char* path)
 {
   File *file = __getFile(d, path);
 
@@ -39,9 +55,9 @@ int openFn(Disk *d, const char *path)
   if (file == NULL) {
     Inode *inode = NULL;
 
-    for (int i = 1; i <= MAX_FDS; i++) {
-      if (inodeLoad(i, d) == NULL) {
-        inode = inodeCreate(i, d);
+    for (int i = 0; i < MAX_FDS; i++) {
+      if (files[i] == NULL) {
+        inode = inodeCreate(i + 1, d);
         break;
       }
     }
@@ -51,14 +67,26 @@ int openFn(Disk *d, const char *path)
       return -1;
 
     file = malloc(sizeof(File));
-    file->disk  = d;
-    file->path  = path;
-    file->fd    = inodeGetNumber(inode);
-    //file->link = NULL;
+    file->disk = d;
+    file->path = path;
+    file->fd = inodeGetNumber(inode);
     files[file->fd - 1] = file;
+    //file->link = NULL;
   }
 
   return file->fd;
+}
+
+int readFn(int fd, char *buf, unsigned int nbytes)
+{
+  Inode *inode = NULL;
+
+  for (int i = 0; i < MAX_FDS; i++)
+    if (files[i] != NULL && files[i]->fd == fd)
+      inode = inodeLoad(fd, files[i]->disk);
+
+  if (inode == NULL)
+    return -1;
 }
 
 int linkFn(int fd, const char *filename, unsigned int inumber) // TODO conferir se ja existe entrada de nome filename
@@ -77,14 +105,4 @@ int linkFn(int fd, const char *filename, unsigned int inumber) // TODO conferir 
     dir->link = link;
 
     return 0;
-}
-
-int installMyFS()
-{
-  fsInfo = malloc(sizeof(FSInfo));
-
-  fsInfo->fsname = "DTFS";
-  fsInfo->isidleFn = isIdleFn;
-  fsInfo->openFn = openFn;
-  fsInfo->fsid = (char) vfsRegisterFS(fsInfo);
 }
