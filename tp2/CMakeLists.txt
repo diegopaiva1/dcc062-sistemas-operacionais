@@ -5,7 +5,7 @@ cmake_minimum_required (VERSION 2.6)
 project (dcc062-tp2 C)
 
 # The following folder will be included
-include_directories ("${PROJECT_SOURCE_DIR}/tp-2")
+include_directories ("${PROJECT_SOURCE_DIR}/tp2")
 
 add_executable (
     dcc062-tp2
